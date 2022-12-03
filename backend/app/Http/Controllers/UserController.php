@@ -11,20 +11,11 @@ use JWTAuth;
 class UserController extends Controller
 {
     public function register(Request $request){
-        // Convert the base64 image to a image file and save it
-        $img = $request->image;
-        $img = str_replace('data:image/jpeg;base64,', '', $img);
-        $img = str_replace(' ', '+', $img);
-        $data = base64_decode($img);
-        $filee = uniqid() . '.jpeg';
-        $file = public_path('images')."\\".$filee;
-        file_put_contents($file, $data);
-        
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'date_of_birth' => $request->date_of_birth,
-            'image' => $filee,
+            'image' => $request->image,
         ]);
 
         // Create 10 todos for the user
