@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use JWTAuth;
 
 class UserController extends Controller
 {
@@ -31,5 +33,27 @@ class UserController extends Controller
             'data' => $user,
             'token' => $token
         ], 201);
+    }
+
+    public function login(Request $request){
+        $credentials = $request->only('email', 'password');
+        $token = null;
+        try {
+            if (!$token = JWTAuth::attempt($credentials)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Invalid Email or Password',
+                ], 401);
+            }
+        } catch (JWTException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Could not create token',
+            ], 500);
+        }
+        return response()->json([
+            'status' => 'success',
+            'token' => $token
+        ]);
     }
 }
