@@ -5,6 +5,7 @@ namespace App;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Todo;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -16,6 +17,10 @@ class User extends Authenticatable implements JWTSubject
         'date_of_birth',
         'image',
     ];
+
+    public function todos(){
+        return $this->hasMany(Todo::class);
+    }
     
     public function getJWTIdentifier()
     {
