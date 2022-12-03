@@ -28,5 +28,18 @@ class AuthController extends Controller
             'user' => $user
         ]);
     }
+
+    public function checkEmail(Request $request){
+        if($user = User::where('email', $request->email)->first();){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Email already exists',
+            ], 200);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Email is available',
+        ], 200);
+    }
     
 }
