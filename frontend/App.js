@@ -13,22 +13,8 @@ export default function App() {
   // Request
   const [request, response, promptAsync] = Facebook.useAuthRequest({
     clientId: FB_APP_ID,
-    // NOTICE: Please do not actually request the token on the client (see:
-    // response_type=token in the authUrl), it is not secure. Request a code
-    // instead, and use this flow:
-    // https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/#confirm
-    // The code here is simplified for the sake of demonstration. If you are
-    // just prototyping then you don't need to concern yourself with this and
-    // can copy this example, but be aware that this is not safe in production.
     responseType: ResponseType.Token,
   });
-
-  if (request) {
-    console.log(
-      "You need to add this url to your authorized redirect urls on your Facebook app: " +
-        request.redirectUri
-    );
-  }
 
   React.useEffect(() => {
     if (response && response.type === "success" && response.authentication) {
