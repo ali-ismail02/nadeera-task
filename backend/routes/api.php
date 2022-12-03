@@ -11,4 +11,7 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::group(['prefix' => 'user'], function () {
     Route::post('signup', [UserController::class, 'register']);
+    Route::group(['middleware' => "jwt"], function () {
+        Route::get('todos', [UserController::class, 'getTodos']);
+    });
 });

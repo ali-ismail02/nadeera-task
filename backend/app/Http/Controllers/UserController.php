@@ -43,8 +43,8 @@ class UserController extends Controller
     }
 
     public function getTodos(Request $request){
-        $user = User::where('id', $request->user_id)->first();
-        $todos = $user->todos;
+        $user = User::where('id', $request->user_data->id)->first();
+        $todos = $user->todos()->get();
         return response()->json([
             'status' => 'success',
             'message' => 'Todos fetched successfully',
