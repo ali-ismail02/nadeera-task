@@ -5,15 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Todo;
+use Database\Seeders\TodoSeeder;
 use JWTAuth;
 
 class UserController extends Controller
 {
     public function register(Request $request){
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->date_of_birth = $request->date_of_birth;
         // Convert the base64 image to a image file and save it
         $img = $request->image;
         $img = str_replace('data:image/jpeg;base64,', '', $img);
@@ -21,10 +18,19 @@ class UserController extends Controller
         $data = base64_decode($img);
         $filee = uniqid() . '.jpeg';
         $file = public_path('images')."\\".$filee;
-        $user->image = $filee;
         file_put_contents($file, $data);
         
-        $user->save();
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'date_of_birth' => $request->date_of_birth,
+            'image' => $filee,
+        ]);
+
+        // Create 10 todos for the user
+        $todoSeeder = new TodoSeeder();
+        $todoSeeder->run($user);
+
         // Create a token for the user
         $token = JWTAuth::fromUser($user);
 
@@ -34,5 +40,15 @@ class UserController extends Controller
             'data' => $user,
             'token' => $token
         ], 201);
+    }
+
+    public function getTodos(Request $request){
+        $user = User::where('id', $request->user_id)->first();
+        $todos = $user->todos;
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Todos fetched successfully',
+            'data' => $todos
+        ], 200);
     }
 }
