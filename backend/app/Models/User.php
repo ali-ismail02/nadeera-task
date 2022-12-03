@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
@@ -10,6 +10,7 @@ use App\Models\Todo;
 class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
+    protected $table = 'users';
 
     protected $fillable = [
         'name',
