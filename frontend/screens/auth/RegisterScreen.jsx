@@ -39,6 +39,25 @@ const RegisterScreen = () => {
         setDateString(`${date}/${month}/${year}`);
     }, [dob]);
 
+    const register = async () => {
+        if(name === "" || dateString === "" || email === "" || image === "") {
+            setError("Please fill all fields");
+            return;
+        }
+        const res = await Post("user/signup", {name, date_of_birth: `${dob.getFullYear()}-${dob.getMonth()+1}-${dob.getDate()}`, image, email});
+        const response = res.data;
+        store.dispatch(updateUserProfile({
+            userProfile: {
+                token: "Bearer " + response.token,
+                id: response.user.id,
+                name: response.user.name,
+                email: response.user.email,
+                image: response.user.image,
+                dob: response.user.date_of_birth,
+            }
+        }));
+    }
+
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate;
         setDob(currentDate);
