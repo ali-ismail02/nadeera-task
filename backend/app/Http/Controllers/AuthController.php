@@ -30,7 +30,7 @@ class AuthController extends Controller
     }
 
     public function checkEmail(Request $request){
-        if($user = User::where('email', $request->email)->first();){
+        if($user = User::where('email', $request->email)->first()){
             return response()->json([
                 'status' => 'error',
                 'message' => 'Email already exists',
