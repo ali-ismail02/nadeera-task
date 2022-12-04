@@ -8,6 +8,7 @@ use App\Models\Todo;
 
 class TodoSeeder extends Seeder
 {
+    // constructor
     public function run($data)
     {
         $i = 0;

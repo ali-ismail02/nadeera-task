@@ -11,6 +11,7 @@ use JWTAuth;
 
 class AuthController extends Controller
 {
+    // Adjusted to login without password and return user data
     public function login(Request $request)
     {
         $user= User::where('email', $request->email)->first();
@@ -29,6 +30,7 @@ class AuthController extends Controller
         ]);
     }
 
+    // check if the email has been used
     public function checkEmail(Request $request){
         if($user = User::where('email', $request->email)->first()){
             return response()->json([
