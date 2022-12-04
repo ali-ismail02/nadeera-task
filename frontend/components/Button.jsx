@@ -10,11 +10,15 @@ const Button = ({ onPress }) => {
         borderRadius: 5,
         padding: 10,
         margin: 10,
-        width: 200,
+        width: 300,
         alignItems: 'center',
-        color: 'white',
-        fontWeight: 'bold',
+        marginBottom: 150,
+    };
 
+    const textStyle = {
+        color: '#fff',
+        fontSize: 24,
+        fontWeight: 'bold',
     };
 
     return (
