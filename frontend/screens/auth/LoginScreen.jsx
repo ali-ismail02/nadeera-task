@@ -20,10 +20,13 @@ const FB_APP_ID = "1135604177323958";
 
 const LoginScreen = () => {
     const navigation = useNavigation();
+
     const [request, response, promptAsync] = Facebook.useAuthRequest({
         clientId: FB_APP_ID,
         responseType: ResponseType.Token,
     });
+
+    // handling login
     const login = async (userInfo) => {
         const res = await Post("auth/login", { email: userInfo.email });
         const response = res.data;
@@ -40,6 +43,7 @@ const LoginScreen = () => {
     }
 
     React.useEffect(() => {
+        // check if the user was already logged in
         const checkIfLogged = async () => {
             const user = await AsyncStorage.getItem("userProfile");
             if (user) {
@@ -47,6 +51,7 @@ const LoginScreen = () => {
             }
         }
         checkIfLogged();
+        // if the user logs in using facebook
         if (response && response.type === "success" && response.authentication) {
             (async () => {
                 const userInfoResponse = await fetch(
