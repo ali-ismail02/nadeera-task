@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { ImageBackground, Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import * as ImagePicker from 'expo-image-picker';
+import React, { useEffect, useState } from "react";
+import { Image, ImageBackground, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Button from "../../components/Button";
 import Post from "../../hooks/Post";
 import { updateUserProfile } from "../../redux/slices/userSlice";
 import { store } from '../../redux/store';
 import styles from "../../styles/styles";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
-import * as ImagePicker from 'expo-image-picker';
-import { useSelector } from "react-redux";
 
 const RegisterScreen = () => {
     const [name, setName] = useState("");
@@ -20,6 +19,7 @@ const RegisterScreen = () => {
 
     useEffect(() => {
         const getUser = async () => {
+            // get the user saved in login screen
             const user = await AsyncStorage.getItem("tempPorfile");
             const userInfo = JSON.parse(user);
             setName(userInfo.name);
@@ -33,6 +33,7 @@ const RegisterScreen = () => {
         getUser();
     }, []);
 
+    // formatting date on update
     useEffect(() => {
         const date = dob.getDate();
         const month = dob.getMonth() + 1;
@@ -41,10 +42,12 @@ const RegisterScreen = () => {
     }, [dob]);
 
     const register = async () => {
+        // check if the user has entered all the details
         if(name === "" || dateString === "" || email === "" || image === "") {
             setError("Please fill all fields");
             return;
         }
+        // register user in backend
         const res = await Post("user/signup", {name, date_of_birth: `${dob.getFullYear()}-${dob.getMonth()+1}-${dob.getDate()}`, image, email});
         const response = res.data;
         store.dispatch(updateUserProfile({
@@ -57,7 +60,6 @@ const RegisterScreen = () => {
                 dob: response.data.date_of_birth,
             }
         }));
-        console.log("hello");
     }
 
     const onChange = (event, selectedDate) => {
@@ -65,6 +67,7 @@ const RegisterScreen = () => {
         setDob(currentDate);
     };
 
+    // open date picker
     const showMode = (currentMode) => {
         DateTimePickerAndroid.open({
             value: dob,
@@ -80,6 +83,7 @@ const RegisterScreen = () => {
         showMode('date');
     };
 
+    // open image picker
     const handleImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
