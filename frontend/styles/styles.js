@@ -7,7 +7,14 @@ export default StyleSheet.create({
         width: width,
         height: height,
         flex: 1,
-        justifyContent: "center",
+        justifyContent: "space-between",
         alignItems: "center",
+    },
+    title: {
+        fontSize: 45,
+        color: "#222",
+        paddingTop: 150,
+        fontWeight: "bold",
+        fontStyle: "italic",
     },
 });
