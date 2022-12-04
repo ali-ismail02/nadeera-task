@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 
 
-const Button = ({ onPress }) => {
+const Button = ({ onPress, text = "LOGIN WITH FACEBOOK" }) => {
 
     const style = {
         // facebook button style
@@ -23,7 +23,7 @@ const Button = ({ onPress }) => {
 
     return (
         <TouchableOpacity style={style} onPress={onPress} >
-            <Text style={textStyle}>LOGIN WITH FACEBOOK</Text>
+            <Text style={textStyle}>{text}</Text>
         </TouchableOpacity>
     );
 };
