@@ -10,6 +10,7 @@ import { updateUserProfile } from "../../redux/slices/userSlice";
 import { store } from '../../redux/store';
 import styles from "../../styles/styles";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { debug } from 'react-native-reanimated';
 
 LogBox.ignoreAllLogs(true)
 
@@ -19,36 +20,42 @@ const FB_APP_ID = "1135604177323958";
 
 const LoginScreen = () => {
     const navigation = useNavigation();
-    const [user, setUser] = React.useState(null);
-    // Request
     const [request, response, promptAsync] = Facebook.useAuthRequest({
         clientId: FB_APP_ID,
         responseType: ResponseType.Token,
     });
+    const login = async (userInfo) => {
+        const res = await Post("auth/login", { email: userInfo.email });
+        const response = res.data;
+        store.dispatch(updateUserProfile({
+            userProfile: {
+                token: "Bearer " + response.token,
+                id: response.user.id,
+                name: response.user.name,
+                email: response.user.email,
+                image: response.user.image,
+                dob: response.user.date_of_birth,
+            }
+        }));
+    }
 
     React.useEffect(() => {
+        const checkIfLogged = async () => {
+            const user = await AsyncStorage.getItem("userProfile");
+            if (user) {
+                await login(JSON.parse(user));
+            }
+        }
+        checkIfLogged();
         if (response && response.type === "success" && response.authentication) {
             (async () => {
                 const userInfoResponse = await fetch(
                     `https://graph.facebook.com/me?access_token=${response.authentication.accessToken}&fields=id,name,picture.type(large),birthday,email`
                 );
                 const userInfo = await userInfoResponse.json();
-                setUser(userInfo);
-                const isUser = await Post("auth/check-email", {email: userInfo.email});
-                console.log(isUser.data);
+                const isUser = await Post("auth/check-email", { email: userInfo.email });
                 if (isUser.data.status === "error") {
-                    const res = await Post("users/login", {email: userInfo.email});
-                    const response = res.data;
-                    store.dispatch(updateUserProfile({
-                        userProfile: {
-                            token: "Bearer " + response.token,
-                            id: response.user.id,
-                            name: response.user.name,
-                            email: response.user.email,
-                            image: response.user.image,
-                            dob: response.user.date_of_birth,
-                        }
-                    }));
+                    await login(userInfo);
                 }
                 await AsyncStorage.setItem("tempPorfile", JSON.stringify(userInfo));
                 navigation.navigate("RegisterScreen");
@@ -72,14 +79,4 @@ const LoginScreen = () => {
     );
 }
 
-// function Profile({ user }) {
-//     return (
-//         <View style={styles.profile}>
-//             <Image source={{ uri: user.picture.data.url }} style={styles.image} />
-//             <Text style={styles.name}>{user.name}</Text>
-//             <Text>ID: {user.id}</Text>
-//             <Text>Birthday: {user.birthday}</Text>
-//         </View>
-//     );
-// }
 export default LoginScreen;
