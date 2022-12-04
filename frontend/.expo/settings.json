@@ -5,6 +5,6 @@
   "minify": false,
   "urlRandomness": null,
   "https": false,
-  "scheme": "com.nadeera.nadeera-task",
+  "scheme": null,
   "devClient": false
 }
