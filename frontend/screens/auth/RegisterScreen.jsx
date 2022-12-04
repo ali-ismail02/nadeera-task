@@ -8,6 +8,7 @@ import styles from "../../styles/styles";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
+import { useSelector } from "react-redux";
 
 const RegisterScreen = () => {
     const [name, setName] = useState("");
@@ -49,13 +50,14 @@ const RegisterScreen = () => {
         store.dispatch(updateUserProfile({
             userProfile: {
                 token: "Bearer " + response.token,
-                id: response.user.id,
-                name: response.user.name,
-                email: response.user.email,
-                image: response.user.image,
-                dob: response.user.date_of_birth,
+                id: response.data.id,
+                name: response.data.name,
+                email: response.data.email,
+                image: response.data.image,
+                dob: response.data.date_of_birth,
             }
         }));
+        console.log("hello");
     }
 
     const onChange = (event, selectedDate) => {
