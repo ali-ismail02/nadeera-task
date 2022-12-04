@@ -21,7 +21,7 @@ export function OnboardingStack() {
         />
 
         <RootStackNav.Screen
-          name="RegisterUser"
+          name="RegisterScreen"
           options={{ headerShown: false }}
           component={RegisterScreen}
         />
