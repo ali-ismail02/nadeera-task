@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface User {
     userProfile?: {
@@ -25,10 +26,12 @@ const userSlice = createSlice({
         return action.payload;
     },
     deleteUser() {
+        AsyncStorage.removeItem('userProfile');
         return initialState;
     },
     updateUserProfile(state, action){
-        state.userProfile = action.payload.userProfile
+        state.userProfile = action.payload.userProfile;
+        AsyncStorage.setItem('userProfile', JSON.stringify(action.payload.userProfile));
     },
   },
 });
