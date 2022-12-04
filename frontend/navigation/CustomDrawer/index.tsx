@@ -8,7 +8,6 @@ import styles from './styles';
 import Icon from 'react-native-vector-icons/Feather';
 
 const CustomDrawer = (props: any) => {
-    const [uri, setUri] = useState('');
 
     const TopSection = () => {
 
@@ -24,8 +23,6 @@ const CustomDrawer = (props: any) => {
             </View>
         )
     }
-    const user = useSelector((state: any) => state?.user);
-    // const dispatch = useDispatch()
     return (
         <ScrollView bounces={false} style={styles.main}>
             <TopSection />
