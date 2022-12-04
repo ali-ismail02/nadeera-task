@@ -97,4 +97,10 @@ export default StyleSheet.create({
         height: 50,
         borderRadius: 50,
     },
+    container: {
+        width:width,
+        height: "100%",
+        paddingHorizontal: width*0.1,
+    },
+
 });
